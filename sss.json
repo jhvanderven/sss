@@ -1,0 +1,48 @@
+{
+	"cursor":{
+		"prefix": ["CUR", "DECLARE C", "CURSOR", "sss-c"],
+		"body": [
+			"DECLARE ${2:@id} ${3|int,bigint,varchar(50),varchar(MAX),bit|}",
+			"DECLARE CURSOR ${1:name} FOR SEL${0}",
+			"\nOPEN ${1}",
+			"FETCH NEXT FROM ${1} INTO ${2}",
+			"WHILE @@FETCH_STATUS = 0",
+			"BEGIN",
+			"\tFETCH NEXT FROM ${1} INTO ${2}",
+			"END",
+			"\nCLOSE ${1}",
+			"DEALLOCATE ${1}",
+			"\n"
+		],
+		"description": "inserts a cursor block"
+	},
+	"select":{
+		"prefix": ["SEL", "SELECT", "sss-s"],
+		"body":[
+			"SELECT ${2:columns}",
+			"FROM ${1:table}",
+			"WHERE ${3:conditions}",
+			"ORDER BY ${4}" 
+		],
+		"description": "select statement"
+	},
+	"if":{
+		"prefix": ["IF", "sss-if"],
+		"body": [
+			"IF ${1} ${2|=,>,<,>=,<=,IS NULL,NOT IS NULL|} ${3}",
+			"BEGIN",
+			"\t${0}",
+			"END"
+		],
+		"description": "if statement"
+	},
+	"block":{
+		"prefix":["B", "BEGIN"],
+		"body":[
+			"BEGIN",
+			"\t${0}",
+			"END"
+		],
+		"description": "begin/end block"
+	}
+}
