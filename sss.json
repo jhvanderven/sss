@@ -35,14 +35,5 @@
 			"END"
 		],
 		"description": "if statement"
-	},
-	"block":{
-		"prefix":["B", "BEGIN"],
-		"body":[
-			"BEGIN",
-			"\t${0}",
-			"END"
-		],
-		"description": "begin/end block"
 	}
 }
