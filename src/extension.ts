@@ -207,6 +207,7 @@ const variablesToCamelCase = (doc: string): string => {
 
 const getStatements = (doc: string): string[] => {
 	let result: string[] = []
+	// the caret is not the symbol above the 6, but the accent circonflexe: Unicode: U+005E, UTF-8: 5E
 	const r = new RegExp(`(^(${statementStartingKeywords.join('|')})\\b|^--)`, "gim");
 	let m: any, ms: any = []
 	while ((m = r.exec(doc)) !== null) {
