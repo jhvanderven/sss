@@ -17,7 +17,7 @@ This extension can format the document if it has a SQL extension.
 
 The formatting is opiononted and cannot be tweaked.
 - keywords are changed to uppercase
-- some keywords are move to a new line
+- some keywords are moved to a new line
   - if the statement has a certain length
 - variables start with a lowercase letter
 - a space is added after a comma
