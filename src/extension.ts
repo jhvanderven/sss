@@ -5,9 +5,10 @@ import * as vscode from 'vscode';
 const keywords = [
 	'FROM', 'UNION', 'LEFT OUTER JOIN', 'RIGHT OUTER JOIN', 'INNER JOIN', 'OUTER JOIN',
 	'SET',
-	'WHERE', 'AND', 'ORDER BY', 'GROUP BY', 'OR'
+	'WHERE', 'AND', 'ORDER BY', 'GROUP BY', 'BEGIN', 'END', 'AS'
 ]
 
+// the comment -- also starts a statement but has to be handled separately
 const statementStartingKeywords = ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'CREATE', 'ALTER', 'DROP']
 
 const indentedKeywords = ['AND', 'OR']
