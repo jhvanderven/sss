@@ -110,7 +110,6 @@ const spaceAfterComma = (doc: string): string => {
 		const r = new RegExp(',', "g")
 		let m: any
 		while ((m = r.exec(lines[i])) !== null) {
-			console.log(`found ${m[0]}`)
 			if (m[0].length > 2 || m[0].length === 1) {
 				lines[i] = insertAt(lines[i], ', ', m.index)
 			}
@@ -125,7 +124,6 @@ const removeTrailingSpaces = (doc: string): string => {
 		const r = new RegExp('\\s$', "g")
 		let m: any
 		while ((m = r.exec(lines[i])) !== null) {
-			console.log(`found >>${m[0]}<<`)
 			lines[i] = removeAt(lines[i], m[0], '', m.index)
 		}
 	}
@@ -154,7 +152,6 @@ const newLines = (doc: string): string => {
 			i--
 		}
 		let prefix = doc.substring(i, pos - 1)
-		console.log(`in front of keyword ${m[0]} there is ${prefix}`)
 		if (prefix && prefix.trim()) {
 			if (indentedKeywords.indexOf(m[0]) !== -1) {
 				doc = insertAt(doc, '\n\t', pos - 1)
@@ -201,7 +198,6 @@ const variablesToCamelCase = (doc: string): string => {
 	let m: any;
 	while ((m = r.exec(doc)) !== null) {
 		const pos = m.index!;
-		console.log(doc, m[0])
 		if (doc.substr(pos, m[0].length) !== camelCased(m[0])) {
 			doc = replaceAt(doc, camelCased(m[0]), pos);
 		}
@@ -211,18 +207,15 @@ const variablesToCamelCase = (doc: string): string => {
 
 const getStatements = (doc: string): string[] => {
 	let result: string[] = []
-	//console.log(statementStartingKeywords.join('|'))
 	const r = new RegExp(`(^(${statementStartingKeywords.join('|')})\\b|^--)`, "gim");
 	let m: any, ms: any = []
 	while ((m = r.exec(doc)) !== null) {
-		//console.log(`found ${m[0]} at ${m.index}`)
 		ms.push(m)
 	}
 	for (let i = 0; i < ms.length - 1; i++) {
 		result.push(doc.substr(ms[i].index, ms[i + 1].index - ms[i].index))
 	}
 	result.push(doc.substr(ms[ms.length - 1].index))
-	//console.log(result)
 	return result
 }
 
@@ -255,8 +248,6 @@ export function activate(context: vscode.ExtensionContext) {
 
 	vscode.languages.registerOnTypeFormattingEditProvider('sql',{
     provideOnTypeFormattingEdits(document: vscode.TextDocument, position: vscode.Position, ch: string, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.TextEdit[]{
-			//console.log(`${ch} typed at postion ${position.line} - ${position.character}`)
-			console.log(`working with line ${document.lineAt(position.line-1).text}`)
 			let text = spacingAroundEqualSign(document.lineAt(position.line - 1).text)
 			text = spacingAroundEqualSign(text)
 			text = variablesToCamelCase(text)
