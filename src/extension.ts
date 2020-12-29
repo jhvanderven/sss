@@ -211,7 +211,7 @@ const variablesToCamelCase = (doc: string): string => {
 const getStatements = (doc: string): string[] => {
 	let result: string[] = []
 	//console.log(statementStartingKeywords.join('|'))
-	const r = new RegExp(`\\b(${statementStartingKeywords.join('|')})\\b`, "gi");
+	const r = new RegExp(`(^(${statementStartingKeywords.join('|')})\\b|^--)`, "gim");
 	let m: any, ms: any = []
 	while ((m = r.exec(doc)) !== null) {
 		//console.log(`found ${m[0]} at ${m.index}`)
@@ -225,45 +225,50 @@ const getStatements = (doc: string): string[] => {
 	return result
 }
 
-// this method is called when your extension is activated
-// your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	console.log('sss extension activated')
-	// // The command has been defined in the package.json file
-	// // Now provide the implementation of the command with registerCommand
-	// // The commandId parameter must match the command field in package.json
-	// let disposable = vscode.commands.registerCommand('sss.helloWorld', () => {
-	// 	// The code you place here will be executed every time your command is executed
-
-	// 	// Display a message box to the user
-	// 	vscode.window.showInformationMessage('Hello VS Code!');
-	// });
-
-	// context.subscriptions.push(disposable);
 	vscode.languages.registerDocumentFormattingEditProvider('sql', {
 		provideDocumentFormattingEdits(document: vscode.TextDocument): vscode.TextEdit[] {
 			let result = ''
 			let edits: vscode.TextEdit[] = []
 			let text = document.getText()
 			let statements = getStatements(text)
-			console.log(statements)
 			statements.forEach(text => {
-				text = spacingAroundEqualSign(text)
-				text = variablesToCamelCase(text)
-				text = upperCase(text)
-				text = spaceAfterComma(text)
-				text = extraSpaces(text)
-				text = newLines(text)
-				text = newLineBetweenStatements(text)
-				text = removeTrailingSpaces(text)
-				text = insertComment(text)
-				console.log(text)
+				if (!text.startsWith('--')) {
+					text = spacingAroundEqualSign(text)
+					text = variablesToCamelCase(text)
+					text = upperCase(text)
+					text = spaceAfterComma(text)
+					text = extraSpaces(text)
+					text = newLines(text)
+					text = newLineBetweenStatements(text)
+					text = removeTrailingSpaces(text)
+					text = insertComment(text)
+				}
 				result += text
 			})
 			edits.push(vscode.TextEdit.replace(new vscode.Range(0, 0, document.lineCount - 1, document.lineAt(document.lineCount - 1).text.length), result))
 			return edits
 		}
 	});
+
+	vscode.languages.registerOnTypeFormattingEditProvider('sql',{
+    provideOnTypeFormattingEdits(document: vscode.TextDocument, position: vscode.Position, ch: string, options: vscode.FormattingOptions, token: vscode.CancellationToken): vscode.TextEdit[]{
+			//console.log(`${ch} typed at postion ${position.line} - ${position.character}`)
+			console.log(`working with line ${document.lineAt(position.line-1).text}`)
+			let text = spacingAroundEqualSign(document.lineAt(position.line - 1).text)
+			text = spacingAroundEqualSign(text)
+			text = variablesToCamelCase(text)
+			text = upperCase(text)
+			text = spaceAfterComma(text)
+			text = extraSpaces(text)
+			text = newLines(text)
+			text = removeTrailingSpaces(text)
+			const edits = []
+			edits.push(vscode.TextEdit.replace(new vscode.Range(position.line-1, 0, position.line-1, document.lineAt(position.line - 1).text.length), text))
+			return edits;
+		}
+	},'\n')
 }
 
 // this method is called when your extension is deactivated

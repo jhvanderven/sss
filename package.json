@@ -15,23 +15,23 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-		"snippets":[
+		"snippets": [
 			{
 				"language": "sql",
 				"path": "./sss.json"
 			}
 		],
 		"languages": [
-            {
-                "id": "sql",
-                "aliases": [
+			{
+				"id": "sql",
+				"aliases": [
 					"SQL",
 					"Sql"
-                ],
-                "extensions": [
-                    "sql"
-                ]
-            }
+				],
+				"extensions": [
+					"sql"
+				]
+			}
 		]
 	},
 	"scripts": {
